@@ -57,8 +57,12 @@ export default {
     methods:{
 
         gotoHome(){
-
             this.$router.push({name:"home"})
+            if (this.$route.name==='home'){
+              window.location.reload();
+
+            }
+            
 
         },
 

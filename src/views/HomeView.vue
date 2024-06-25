@@ -73,9 +73,28 @@
             <SignUpForm v-if="showSign" @close="closeSignForm" @showProfileNav="showProfile" />
             <LoginForm v-if="showLogin" @closeLogin="closeLoginForm" @openSign="openSignForm" @showProfileNav="showProfile" @userId="getUserId"/>
 
-            <div v-for="postItem in postsData" :key="postItem.Post.id">
-              <hello-world :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"/>
+            <div v-if="loggedIn=='false'" class="featured-posts">
+              <div v-for="postItem in postsData" :key="postItem.Post.id">
+              <hello-world :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
+              :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" 
+              :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"  :gender="postItem.Post.owner.gender"
+              :postUserID="postItem.Post.owner.id" :postID="postItem.Post.id" :requesterIds="postItem.voter_ids" :accepted="postItem.accepted"/>
             </div>
+            </div>
+
+            <div v-if="loggedIn=='true'" class="featured-posts">
+              <div v-for="postItem in sortedPosts" :key="postItem.Post.id">
+              <hello-world :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
+              :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" 
+              :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"  :gender="postItem.Post.owner.gender"
+              :postUserID="postItem.Post.owner.id" :postID="postItem.Post.id" :requesterIds="postItem.voter_ids" :accepted="postItem.accepted" :numberRequests="postItem.votes"/>
+            </div>
+            </div>
+           <!-- <div>{{sortedPosts}}</div>  -->
+
+
+
+            
 
           </div>
         </section>
@@ -127,6 +146,46 @@ export default {
     };
   },
 
+  computed: {
+    sortedPosts() {
+      console.log("computed :",this.postsData)
+      // return this.postsData.sort();
+
+      const user_id =parseInt(localStorage.getItem('userID'), 10)
+      // Sort posts based on your criteria
+      return this.postsData.sort((a, b) => {
+      // Compare dates
+      const dateA = new Date(a.Post.datetime);
+      const dateB = new Date(b.Post.datetime);
+
+      // First, show posts where postItem.Post.owner_id matches the userID
+      if (a.Post.owner.id === user_id && b.Post.owner.id !== user_id) {
+        return -1;
+      }
+      if (a.Post.owner.id !== user_id && b.Post.owner.id === user_id) {
+        return 1;
+      }
+
+      // Then, show posts where postItem.voter_ids includes userID
+      if (
+        a.voter_ids.includes(user_id) &&
+        !b.voter_ids.includes(user_id)
+      ) {
+        return -1;
+      }
+      if (
+        !a.voter_ids.includes(user_id) &&
+        b.voter_ids.includes(user_id)
+      ) {
+        return 1;
+      }
+
+      // Compare dates for other cases
+      return dateA - dateB;
+    });
+      }
+      ,},
+
   mounted() {
     // Initialize Select2 after the component is mounted
     $('.js-example-basic-single').select2();
@@ -144,9 +203,6 @@ export default {
       this.checkLoggedIn()
 
   },
-  // updated(){
-  //   console.log("user is is ------------ : ",this.usedID)
-  // },
 
 watch: {
     usedID(newValue) {
@@ -185,6 +241,9 @@ async checkLoggedIn(){
         if (!response.ok) {
           localStorage.removeItem('token');
           localStorage.removeItem('loggedIn');
+          localStorage.removeItem('userID');
+          window.location.reload();
+
           return false
           throw new Error('Failed to verify token');
             
@@ -222,6 +281,7 @@ async checkLoggedIn(){
           const data = await response.json();
           // Handle the retrieved data as needed
           this.postsData = data;
+          // console.log(this.postsData)
         } else {
           console.error('Failed to fetch data:', response.statusText);
           // Handle the error

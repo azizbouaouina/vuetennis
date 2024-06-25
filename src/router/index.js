@@ -30,6 +30,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CreateMatch from '../views/CreateMatch.vue';
 import EditProfile from '../views/EditProfile.vue';
+import Requests from '../views/Requests.vue';
 
 
 
@@ -42,7 +43,15 @@ const routes = [
   {
     path: '/editprofile',
     name: 'edit',
-    component: EditProfile
+    component: EditProfile,
+    meta: { requiresAuth: true } 
+  },
+
+  {
+    path: '/request/:postId',
+    name: 'request',
+    component: Requests,
+    meta: { requiresAuth: true } 
   },
 
   {
@@ -62,9 +71,6 @@ const router = createRouter({
 router.beforeEach(async(to, from, next) => {
   // Check if the route requires authentication
   if (to.matched.some(route => route.meta.requiresAuth)) {
-    // Check if the user is authenticated (local storage item is set to 'true')
-    // if (localStorage.getItem('loggedIn') === 'true') {
-          // if (HomeView.methods.checkLoggedIn.call(router.currentRoute.instance)) {
 
       const isAuthenticated = await HomeView.methods.checkLoggedIn.call(router.currentRoute.instance);
       console.log('isAuthenticated :---------------------------:',isAuthenticated)
@@ -76,7 +82,7 @@ router.beforeEach(async(to, from, next) => {
       next();
     } else {
       // User is not authenticated, redirect to login or another route
-      next('/'); // Replace '/login' with the route you want to redirect to
+      next('/'); 
     }
   } else {
     // If the route does not require authentication, allow navigation

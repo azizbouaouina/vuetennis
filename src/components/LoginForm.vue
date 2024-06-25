@@ -70,6 +70,9 @@ export default {
                 this.$emit('userId',res.user_id)
                 this.$store.commit('updateUserId',res.user_id)
                 localStorage.setItem('userID',res.user_id)
+                window.location.reload();
+
+
 
             }
             else {

@@ -24,18 +24,14 @@
           <option value="advanced">Advanced</option>
         </select>
 <!-- class="js-example-basic-single" -->
-        <div class="select-city">
-          <label for="city">City:</label>
-        <select
-        id="city"
-        name="city"
-        v-model="post.city"
-        >
+        <!-- <div class="select-city"> -->
+        <label for="city">City:</label>
+        <select id="city" v-model="post.city">
         <option v-for="city in cities" :value="city" :key="city">{{ city }}</option>
         </select>
 
 
-        </div>
+        <!-- </div> -->
         
 
         <label for="address">Address:</label>
@@ -90,8 +86,8 @@ export default {
         maxCharacterCount: 150,
         characterCount: 150,
 
-        maxCharacterCountAdress: 50,
-        characterCountAdress: 50,
+        maxCharacterCountAdress: 40,
+        characterCountAdress: 40,
 
         datetime: this.getCurrentDatetime(),
 

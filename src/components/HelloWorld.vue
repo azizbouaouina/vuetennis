@@ -5,17 +5,18 @@
     <div class="post">
       <div class="player-info">
         <div class="player-image">
-          <!-- <img src="http://localhost:8000/static/images/"+{{imageProfil}} alt="Player Image" /> -->
-          <img :src="`http://localhost:8000/static/images/${imageProfil}`" alt="Player Image" />
+          <img img v-if="imageProfil" :src="`http://localhost:8000/static/images/${imageProfil}`" alt="Player Image" />
+          <img v-else-if="gender === 'male'" src="../assets/default-profile-male.png" alt="Default Male Profile Image" />
+          <img v-else-if="gender === 'female'" src="../assets/default-female-profile-image.gif" alt="Default Female Profile Image" />
 
         </div>
-        <div class="player-name">{{name + ' ' + familyName}}</div>
+        <div class="player-name">{{name + ' ' + familyName}}</div> 
         <div class="name-line"></div>
       </div>
 
       <div class="info-section">
         <p v-if="!expired"><strong>Date and Time:</strong> {{formatDate(date)}}</p>
-        <p v-if="expired" style="margin-left: 5px;" class="date-title-expired"><strong>Date and Time: </strong> </p><p v-if="expired" class="expired"> {{formatDate(date)}} : <strong>Expired</strong></p>
+        <p v-if="expired" style="" class="date-title-expired"><strong>Date and Time: </strong> </p><p v-if="expired" class="expired"> {{formatDate(date)}} : <strong>Expired</strong></p>
         
         <p><strong>Level of Play:</strong> {{level}}</p>
         <p><strong>City:</strong> {{city}}</p>
@@ -29,10 +30,43 @@
         </p>
       </div>
 
-      <div class="buttons">
-        <button class="button request-match" >Request a Match</button>
-        <button class="button message-player">Message the Player</button>
+
+
+      <div v-if="userid != postUserID" >
+
+        <div v-if="checkUserRequestedMatch() && check_accepted()" class="buttons-1">
+          <div style="display:flex;justify-content: center;">
+              <button class="button accept-match" >Request Accepted !</button>  
+          </div>
+          
+          <div class="buttons-2">
+            <button class="button remove-match" @click="deleteRequest">Remove Request</button>
+          <button class="button message-player" @click="messagePlayer">Message the Player</button>
+
+          </div>
+          
+        </div>
+
+        <div v-else-if="!checkUserRequestedMatch() && check_accepted()" class="buttons">
+          <button class="button match-set" >Match already set</button>
+        </div>
+
+        <div v-else-if="checkUserRequestedMatch()" class="buttons">
+          <button class="button remove-match" @click="deleteRequest">Remove Request</button>
+          <button class="button message-player" @click="messagePlayer">Message the Player</button>
+        </div>
+        <div v-else class="buttons">
+          <button class="button request-match" @click="requestaMatch">Request a Match</button>
+          <button class="button message-player" @click="messagePlayer">Message the Player</button>
+        </div>
+         
+        
       </div>
+
+      <div v-if="userid == postUserID" class="buttons"> 
+        <button class="button-request-see request-see" @click="seeRequests" >See Match Requests : {{numberRequests}}</button>
+      </div>
+
     </div>
   </body>
  
@@ -46,7 +80,8 @@ export default {
 
   
 
-  props:['date','level','city','address','description','name','familyName','imageProfil'],
+  props:['date','level','city','address','description','name','familyName',
+  'imageProfil','postUserID','postID','requesterIds','gender','accepted','numberRequests'],
 
   // data(){
   //   return{
@@ -59,6 +94,10 @@ export default {
         expired: function() {
         return !this.isFutureDate(this.date);
       },
+
+      userid : function(){
+        return localStorage.getItem('userID')
+      }
 
     },
 
@@ -92,8 +131,131 @@ isFutureDate(inputDate) {
   } else {
     return false;
   }
-}
+},
+
+async submitRequest() {
+    const url = 'http://127.0.0.1:8000/votes/';
+    const data = {
+      post_id: this.postID,
+      dir: 1
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        // Handle success
+        console.log('Vote submitted successfully');
+      } else {
+        // Handle error
+        console.error('Failed to submit vote');
+      }
+    } catch (error) {
+      console.error('An error occurred while submitting vote', error);
+    }
   },
+
+requestaMatch(){
+  if (localStorage.getItem('loggedIn') == null)
+                 
+  {
+    alert('You need to Log in First');
+  } 
+  else{
+    // console.log(this.postID)
+    this.submitRequest()
+    window.location.reload();
+  }
+
+},
+
+async deleteRequest(){
+  const url = 'http://127.0.0.1:8000/votes/';
+    const data = {
+      post_id: this.postID,
+      dir: 0
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        // Handle success
+        console.log('Vote submitted successfully');
+      } else {
+        // Handle error
+        console.error('Failed to submit vote');
+      }
+    } catch (error) {
+      console.error('An error occurred while submitting vote', error);
+    }
+
+    window.location.reload();
+
+
+},
+
+messagePlayer(){
+
+  if (localStorage.getItem('loggedIn') == null)
+                 
+  {
+    alert('You need to Log in First');
+  } 
+  else{
+  alert('Feature Comming Soon');
+  }
+
+},
+
+checkUserRequestedMatch(){
+
+  const userID = localStorage.getItem('userID')
+  const userIDInt = parseInt(userID, 10);
+
+  console.log("user id is : ",userID)
+  console.log('array : ',this.requesterIds)
+  console.log(this.requesterIds.includes(userIDInt))
+  if (userID ){
+    return this.requesterIds.includes(userIDInt);
+  }
+  else {
+    return false
+  }
+},
+
+check_accepted(){
+  return this.accepted.includes(true)
+},
+
+seeRequests(){
+
+  this.$router.push({
+  name: 'request',
+  params: {
+    postId: this.postID
+  }
+});
+
+},
+
+},
   
 }
 </script>
@@ -108,8 +270,8 @@ isFutureDate(inputDate) {
         box-sizing: border-box;
         margin: 10px;
         width: 400px;
-        height: 390px;
-        /* background-color: #f4f4f4; */
+        height: 450px;
+        background-color: #f4f4f49e;
         position: relative;
       }
 
@@ -154,6 +316,7 @@ isFutureDate(inputDate) {
 
       .info-section {
         margin: 10px 0;
+        word-wrap: break-word;
       }
 
       .info-section p {
@@ -165,7 +328,7 @@ isFutureDate(inputDate) {
       .expired {
         color: rgba(211, 31, 31, 0.8);
     font-size: 1em;
-    margin: 8px 0;
+    /* margin: 8px 0; */
     display: inline;
   }
 
@@ -183,6 +346,30 @@ isFutureDate(inputDate) {
         bottom: 13px;
         left: 50%;
         transform: translateX(-50%);
+      }
+
+      .buttons-2{
+        display: flex;
+        gap: 10px;
+        /* margin-top: 15px; */
+        /* justify-content: center; */
+        /* position: absolute; */
+        /* bottom: 13px; */
+        /* left: 50%; */
+        /* transform: translateX(-50%); */
+
+      }
+
+      .buttons-1{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        position: absolute;
+        bottom: 13px;
+        left: 50%;
+        transform: translateX(-50%);
+
       }
 
       .button {
@@ -204,6 +391,29 @@ isFutureDate(inputDate) {
         background-color: #218e4e;
       }
 
+      .remove-match{
+        background-color: #ae2727;
+        color: white;
+
+      }
+      .remove-match:hover {
+        background-color: #8e2121;
+      }
+
+      .accept-match{
+        background-color: #272bae;
+        color: white;
+        cursor: auto;
+
+      }
+
+      .match-set{
+        background-color: #272bae;
+        color: white;
+        cursor: auto;
+
+      }
+
       .message-player {
         background-color: #2980b9;
         color: white;
@@ -211,6 +421,25 @@ isFutureDate(inputDate) {
 
       .message-player:hover {
         background-color: #236a8b;
+      }
+
+      .request-see {
+        background-color: #2980b9;
+        color: white;
+      }
+
+      .request-see:hover {
+        background-color: #236a8b;
+      }
+
+      .button-request-see {
+        height: 35px;
+        width: 200px;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
       }
     </style>
 

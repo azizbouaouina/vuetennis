@@ -26,7 +26,7 @@
                 <input class="input-signup" type="password" id="password" v-model="password" required />
 
                 <label class="label-signup" for="dob">Date of Birth:</label>
-                <input class="input-signup" type="date" id="dob" v-model="date_of_birth" required />
+                <input class="input-signup" type="date" id="dob" v-model="date_of_birth" :max="getCurrentDate()" required />
 
                 <label class="label-signup" for="gender">Gender:</label>
                 <select id="gender"  v-model="user_gender" required>
@@ -105,6 +105,7 @@ export default {
                 if (status === 201){
                     localStorage.setItem('token',res.access_token)
                     localStorage.setItem('loggedIn',true)
+                    localStorage.setItem('userID',res.user_id)
                     this.changePopUpSignUptoFalse()
                     this.showProfile()
 
@@ -124,7 +125,19 @@ export default {
         showProfile(){
           this.$emit('showProfileNav','true')
 
-        }
+        },
+        getCurrentDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            let month = today.getMonth() + 1;
+            let day = today.getDate();
+
+            // Add leading zero if month or day is a single digit
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+
+            return `${year}-${month}-${day}`;
+        },
     }
 
 }
