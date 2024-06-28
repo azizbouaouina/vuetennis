@@ -32,9 +32,9 @@
 
 
 
-      <div v-if="userid != postUserID" >
+      <div v-if="userId != postUserID" >
 
-        <div v-if="checkUserRequestedMatch() && check_accepted()" class="buttons-1">
+        <div v-if="isMatchRequested && check_accepted()" class="buttons-1">
           <div style="display:flex;justify-content: center;">
               <button class="button accept-match" >Request Accepted !</button>  
           </div>
@@ -47,11 +47,11 @@
           
         </div>
 
-        <div v-else-if="!checkUserRequestedMatch() && check_accepted()" class="buttons">
+        <div v-else-if="!isMatchRequested && check_accepted()" class="buttons">
           <button class="button match-set" >Match already set</button>
         </div>
 
-        <div v-else-if="checkUserRequestedMatch()" class="buttons">
+        <div v-else-if="isMatchRequested" class="buttons">
           <button class="button remove-match" @click="deleteRequest">Remove Request</button>
           <button class="button message-player" @click="messagePlayer">Message the Player</button>
         </div>
@@ -63,7 +63,7 @@
         
       </div>
 
-      <div v-if="userid == postUserID" class="buttons"> 
+      <div v-if="userId  == postUserID" class="buttons"> 
         <button class="button-request-see request-see" @click="seeRequests" >See Match Requests : {{numberRequests}}</button>
       </div>
 
@@ -73,36 +73,48 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+
+import { checkLoggedIn } from '../utils';
+
 
 export default {
-  name: 'HelloWorld',
+  name: 'MatchPosts',
+
+  data(){
+    return{
+
+      userId: null,
+      isMatchRequested: null,
+
+    };
+  },
 
   
 
   props:['date','level','city','address','description','name','familyName',
   'imageProfil','postUserID','postID','requesterIds','gender','accepted','numberRequests'],
 
-  // data(){
-  //   return{
-  //     expired : this.isFutureDate(this.date)
-  //   }
-  // },
-
   computed:{
         
         expired: function() {
         return !this.isFutureDate(this.date);
       },
-
-      userid : function(){
-        return localStorage.getItem('userID')
-      }
-
     },
 
+  async created() {
+    // Fetch userId and isMatchRequested asynchronously when the component is created
+    this.userId = await this.getUserId();
+    this.isMatchRequested = await this.checkUserRequestedMatch();
+  },
+
   methods:{
-    formatDate(inputDate) {
+
+    async getUserId() {
+    return await checkLoggedIn(); 
+  },
+
+
+  formatDate(inputDate) {
   const months = [
     "January", "February", "March", "April",
     "May", "June", "July", "August",
@@ -163,19 +175,25 @@ async submitRequest() {
     }
   },
 
-requestaMatch(){
-  if (localStorage.getItem('loggedIn') == null)
-                 
-  {
-    alert('You need to Log in First');
-  } 
-  else{
-    // console.log(this.postID)
-    this.submitRequest()
-    window.location.reload();
-  }
+  
 
+
+async requestaMatch() {
+  try {
+    const isLoggedIn = await checkLoggedIn();
+
+    if (isLoggedIn) {
+      this.submitRequest();
+      window.location.reload();
+    } else {
+      alert('You need to log in first');
+    }
+  } catch (error) {
+    console.error('Error checking login status:', error);
+    // Handle error as appropriate
+  }
 },
+
 
 async deleteRequest(){
   const url = 'http://127.0.0.1:8000/votes/';
@@ -211,22 +229,23 @@ async deleteRequest(){
 
 },
 
-messagePlayer(){
+async messagePlayer() {
+  try {
+    const isLoggedIn = await checkLoggedIn();
 
-  if (localStorage.getItem('loggedIn') == null)
-                 
-  {
-    alert('You need to Log in First');
-  } 
-  else{
-  alert('Feature Comming Soon');
+    if (isLoggedIn) {
+      alert('Feature Comming Soon');
+    } else {
+      alert('You need to log in first');
+    }
+  } catch (error) {
+    console.error('Error checking login status:', error);
   }
-
 },
 
-checkUserRequestedMatch(){
+async checkUserRequestedMatch(){
 
-  const userID = localStorage.getItem('userID')
+  const userID = await checkLoggedIn();
   const userIDInt = parseInt(userID, 10);
 
   console.log("user id is : ",userID)

@@ -75,7 +75,7 @@
 
             <div v-if="loggedIn=='false'" class="featured-posts">
               <div v-for="postItem in postsData" :key="postItem.Post.id">
-              <hello-world :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
+              <MatchPosts :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
               :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" 
               :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"  :gender="postItem.Post.owner.gender"
               :postUserID="postItem.Post.owner.id" :postID="postItem.Post.id" :requesterIds="postItem.voter_ids" :accepted="postItem.accepted"/>
@@ -84,7 +84,7 @@
 
             <div v-if="loggedIn=='true'" class="featured-posts">
               <div v-for="postItem in sortedPosts" :key="postItem.Post.id">
-              <hello-world :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
+              <MatchPosts :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
               :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" 
               :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"  :gender="postItem.Post.owner.gender"
               :postUserID="postItem.Post.owner.id" :postID="postItem.Post.id" :requesterIds="postItem.voter_ids" :accepted="postItem.accepted" :numberRequests="postItem.votes"/>
@@ -106,7 +106,7 @@
 </template>
 
 <script scoped>
-import HelloWorld from '../components/HelloWorld.vue'
+import MatchPosts from '../components/MatchPosts.vue'
 import SignUpForm from '../components/SignUpForm.vue'
 import LoginForm from '../components/LoginForm.vue'
 import DropDownProfile from '../components/DropDownProfile.vue'
@@ -120,7 +120,7 @@ export default {
   name: 'HomeView',
 
   components:{
-    HelloWorld,
+    MatchPosts,
     SignUpForm,
     LoginForm,
     DropDownProfile,
