@@ -1,36 +1,9 @@
-// import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
-// import CreateMatch from '../views/CreateMatch.vue'
-
-// const routes = [
-//   {
-//     path: '/',
-//     name: 'home',
-//     component: HomeView
-//   },
-//   {
-//     path: '/creatematch',
-//     name: 'match',
-//     component: CreateMatch,
-
-//   },
-  
-// ]
-
-
-// const router = createRouter({
-//   history: createWebHistory(process.env.BASE_URL),
-//   routes
-// })
-
-// export default router
-
-
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CreateMatch from '../views/CreateMatch.vue';
 import EditProfile from '../views/EditProfile.vue';
 import Requests from '../views/Requests.vue';
+import NotFound from '../views/NotFound.vue';
 
 
 
@@ -44,22 +17,24 @@ const routes = [
     path: '/editprofile',
     name: 'edit',
     component: EditProfile,
-    meta: { requiresAuth: true } 
   },
 
   {
     path: '/request/:postId',
     name: 'request',
     component: Requests,
-    meta: { requiresAuth: true } 
   },
 
   {
     path: '/creatematch',
     name: 'match',
     component: CreateMatch,
-    meta: { requiresAuth: true } // Add this meta field to specify authentication requirement
   },
+  {
+    path: '/:pathMatch(.*)*',  // Wildcard route for handling 404
+    name: 'not-found',
+    component: NotFound,
+  }
   
 ];
 
@@ -68,24 +43,21 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async(to, from, next) => {
-  // Check if the route requires authentication
-  if (to.matched.some(route => route.meta.requiresAuth)) {
+router.beforeEach(async (to, from, next) => {
+  // If the target route is not the home route
+  if (to.name !== 'home') {
+    const isAuthenticated = await HomeView.methods.checkLoggedIn.call(router.currentRoute.instance);
+    console.log('isAuthenticated :---------------------------:', isAuthenticated);
 
-      const isAuthenticated = await HomeView.methods.checkLoggedIn.call(router.currentRoute.instance);
-      console.log('isAuthenticated :---------------------------:',isAuthenticated)
-
-  if (isAuthenticated) {
-    
-
+    if (isAuthenticated) {
       // User is authenticated, allow navigation
       next();
     } else {
-      // User is not authenticated, redirect to login or another route
-      next('/'); 
+      // User is not authenticated, redirect to home or login route
+      next('/');
     }
   } else {
-    // If the route does not require authentication, allow navigation
+    // If the route is the home route, allow navigation
     next();
   }
 });
