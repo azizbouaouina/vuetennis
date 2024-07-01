@@ -31,7 +31,7 @@ rel="stylesheet"
 <script>
 
 import DropDownProfile from './DropDownProfile.vue'
-
+import { checkLoggedIn } from '../utils';
 
 export default {
     components:{
@@ -66,18 +66,20 @@ export default {
 
         },
 
-        createTennisMatch(){
-            
-                if (localStorage.getItem('loggedIn') == null)
-                 
-                 {
-                    alert('You need to Log in First');
-                } 
-                else{
+        async createTennisMatch() {
+            try {
+                const isLoggedIn = await checkLoggedIn();
+
+                if (isLoggedIn) {
                     this.$router.push({name:"match"})
+                } else {
+                alert('You need to log in first');
                 }
-            
+            } catch (error) {
+                console.error('Error checking login status:', error);
+            }
         },
+
 
         changePopUpSignUp(){
             // this.showSign = true
