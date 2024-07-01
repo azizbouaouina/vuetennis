@@ -108,6 +108,7 @@ export default {
                     localStorage.setItem('userID',res.user_id)
                     this.changePopUpSignUptoFalse()
                     this.showProfile()
+                    window.location.reload();
 
 
                 }

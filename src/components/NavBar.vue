@@ -56,15 +56,14 @@ export default {
 
     methods:{
 
-        gotoHome(){
-            this.$router.push({name:"home"})
-            if (this.$route.name==='home'){
-              window.location.reload();
-
-            }
-            
-
-        },
+gotoHome() {
+    this.$router.push({ name: "home" }).then(() => {
+        // Check if route is successfully navigated
+        if (this.$route.name === 'home') {
+            window.location.reload();
+        }
+    });
+},
 
         async createTennisMatch() {
             try {

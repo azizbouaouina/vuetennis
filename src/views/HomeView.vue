@@ -66,12 +66,10 @@
 
         <section class="featured-section">
           <h2 class="title-container">Match Opportunities</h2>
-          <!-- <h1>{{usedID}}</h1> -->
-          <!-- <h1>{{$store.state.userID}}</h1> -->
 
           <div class="featured-posts">
             <SignUpForm v-if="showSign" @close="closeSignForm" @showProfileNav="showProfile" />
-            <LoginForm v-if="showLogin" @closeLogin="closeLoginForm" @openSign="openSignForm" @showProfileNav="showProfile" @userId="getUserId"/>
+            <LoginForm v-if="showLogin" @closeLogin="closeLoginForm" @openSign="openSignForm" @showProfileNav="showProfile"/>
 
             <div v-if="loggedIn=='false'" class="featured-posts">
               <div v-for="postItem in postsData" :key="postItem.Post.id">
@@ -83,7 +81,7 @@
             </div>
 
             <div v-if="loggedIn=='true'" class="featured-posts">
-              <div v-for="postItem in sortedPosts" :key="postItem.Post.id">
+              <div v-for="postItem in sortedPostsData" :key="postItem.Post.id">
               <MatchPosts :date="postItem.Post.datetime" :level="postItem.Post.level" :city="postItem.Post.city" 
               :address="postItem.Post.address" :description="postItem.Post.description" :name="postItem.Post.owner.name" 
               :familyName="postItem.Post.owner.family_name" :imageProfil="postItem.Post.owner.photo"  :gender="postItem.Post.owner.gender"
@@ -112,6 +110,7 @@ import LoginForm from '../components/LoginForm.vue'
 import DropDownProfile from '../components/DropDownProfile.vue'
 import NavBar from '../components/NavBar.vue'
 
+import { checkLoggedIn as verifyUserLoggedIn } from '../utils';
 
 
 
@@ -141,19 +140,41 @@ export default {
       down:false,
       cities: require('../assets/commune_data.json').Commune,
       postsData:[],
-      usedID:4555
+      sortedPostsData: [],
+      user_id: null,
 
     };
   },
 
-  computed: {
-    sortedPosts() {
-      console.log("computed :",this.postsData)
-      // return this.postsData.sort();
 
-      const user_id =parseInt(localStorage.getItem('userID'), 10)
+
+  mounted() {
+    // Initialize Select2 after the component is mounted
+    $('.js-example-basic-single').select2();
+
+    // Set the minimum date to the current date
+    const today = new Date().toISOString().split("T")[0];
+    this.minDate = today;
+    this.getDataOnMount();
+    
+
+  },
+
+
+  async created(){
+    
+    await this.checkLoggedIn()
+    await this.sortedPosts()
+  },
+
+
+  methods: {
+
+    async sortedPosts() {
+      const userID = await verifyUserLoggedIn()
+      const user_id =parseInt(userID, 10)
       // Sort posts based on your criteria
-      return this.postsData.sort((a, b) => {
+      this.sortedPostsData = this.postsData.sort((a, b) => {
       // Compare dates
       const dateA = new Date(a.Post.datetime);
       const dateB = new Date(b.Post.datetime);
@@ -183,41 +204,8 @@ export default {
       // Compare dates for other cases
       return dateA - dateB;
     });
-      }
-      ,},
+      },
 
-  mounted() {
-    // Initialize Select2 after the component is mounted
-    $('.js-example-basic-single').select2();
-
-    // Set the minimum date to the current date
-    const today = new Date().toISOString().split("T")[0];
-    this.minDate = today;
-    this.getDataOnMount();
-    console.log('mounted started')
-    // this.checkLoggedIn()
-
-  },
-
-  created(){
-      this.checkLoggedIn()
-
-  },
-
-watch: {
-    usedID(newValue) {
-      // Log the new value to the console
-      console.log('New value:', newValue);
-    }
-  },
-
-
-
-  methods: {
-
-    getUserId(value){
-      this.usedID = value
-    },
 
     showProfile(value){
       this.loggedIn = value
@@ -239,9 +227,7 @@ async checkLoggedIn(){
         const response = await fetch(`http://127.0.0.1:8000/verify?token=${token}`);
 
         if (!response.ok) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('loggedIn');
-          localStorage.removeItem('userID');
+
           window.location.reload();
 
           return false
@@ -249,10 +235,7 @@ async checkLoggedIn(){
             
 
         }
-
-        // Parse the JSON response
-        // const data = await response.json();
-        this.loggedIn = localStorage.getItem('loggedIn')
+        this.loggedIn='true'
 
         // If the response is successful, the user is authenticated
         
