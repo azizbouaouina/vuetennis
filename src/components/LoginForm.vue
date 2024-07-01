@@ -63,13 +63,11 @@ export default {
             if (status === 200){
                 localStorage.setItem('token',res.access_token)
                 this.invalidCred=false
-                localStorage.setItem('loggedIn',true)
                 this.closeLoginForm()
                 this.showProfile()
                 // console.log("user is is ------------ : ",res.user_id)
                 this.$emit('userId',res.user_id)
                 this.$store.commit('updateUserId',res.user_id)
-                localStorage.setItem('userID',res.user_id)
                 window.location.reload();
 
 

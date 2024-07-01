@@ -28,8 +28,6 @@ export default {
         logout() {
             console.log('Log Out clicked');
             localStorage.removeItem('token');
-            localStorage.removeItem('loggedIn');
-            localStorage.removeItem('userID');
             this.$emit('loggedout','false')
             this.$router.push({name:"home"})
             if (this.$route.name==='home'){

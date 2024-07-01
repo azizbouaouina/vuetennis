@@ -104,8 +104,6 @@ export default {
                 }
                 if (status === 201){
                     localStorage.setItem('token',res.access_token)
-                    localStorage.setItem('loggedIn',true)
-                    localStorage.setItem('userID',res.user_id)
                     this.changePopUpSignUptoFalse()
                     this.showProfile()
                     window.location.reload();
