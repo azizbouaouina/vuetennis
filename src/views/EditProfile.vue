@@ -54,6 +54,8 @@
 
 <script>
 import NavBar from '../components/NavBar.vue'
+import { checkLoggedIn } from '../utils';
+
 
 export default {
 
@@ -64,7 +66,6 @@ export default {
   data() {
     return {
       file: null,
-      userID : localStorage.getItem('userID'),
       userData: {
         name: "",
         family_name: "",
@@ -79,37 +80,40 @@ export default {
     handleFileChange(event) {
       this.file = event.target.files[0];
     },
-    uploadImage() {
+    async uploadImage() {
       if (!this.file) {
         alert('Please select a file');
         return;
       }
-
       const formData = new FormData();
       formData.append('file', this.file);
-
-
-      fetch(`http://localhost:8000/users/${this.userID}/upload/`, {
-        method: 'PUT',
-        body: formData,
-        headers: {
-          // Add any additional headers as needed
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Image uploaded successfully', data);
-          // Handle success, if needed
-          window.location.reload();
-        })
-        .catch(error => {
-          console.error('Error uploading image', error);
-          // Handle error, if needed
+      try {
+        const userId = await checkLoggedIn(); 
+        const response = await fetch(`http://localhost:8000/users/${userId}/upload/`, {
+          method: 'PUT',
+          body: formData,
+          headers: {
+            // Add any additional headers as needed
+          },
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Image uploaded successfully', data);
+        // Handle success, if needed
+        window.location.reload();
+      } catch (error) {
+        console.error('Error uploading image', error);
+        // Handle error, if needed
+      }
     },
     async getUser() {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/${localStorage.getItem('userID')}`, {
+        const userId = await checkLoggedIn()
+        const response = await fetch(`http://127.0.0.1:8000/users/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -139,8 +143,8 @@ export default {
 
     async updateUser() {
       try {
-
-        const response = await fetch(`http://127.0.0.1:8000/users/${localStorage.getItem('userID')}`, {
+        const userId = await checkLoggedIn()
+        const response = await fetch(`http://127.0.0.1:8000/users/${userId}`, {
           method: 'PUT',
           headers: {
             'Accept': 'application/json',
