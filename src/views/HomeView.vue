@@ -171,9 +171,12 @@ export default {
   methods: {
 
     async sortedPosts() {
-      const userID = await verifyUserLoggedIn()
-      const user_id =parseInt(userID, 10)
-      // Sort posts based on your criteria
+      try {
+        const data_id = await verifyUserLoggedIn();
+
+        if (data_id) {
+      const user_id =parseInt(data_id, 10)          
+          // Sort posts based on your criteria
       this.sortedPostsData = this.postsData.sort((a, b) => {
       // Compare dates
       const dateA = new Date(a.Post.datetime);
@@ -204,7 +207,53 @@ export default {
       // Compare dates for other cases
       return dateA - dateB;
     });
-      },
+
+
+        } else {
+          console.error('Failed to fetch data:');
+          // Handle the error
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        // Handle the error
+      }
+    },
+
+    // async sortedPosts() {
+    //   const userID = await verifyUserLoggedIn()
+    //   const user_id =parseInt(userID, 10)
+    //   // Sort posts based on your criteria
+    //   this.sortedPostsData = this.postsData.sort((a, b) => {
+    //   // Compare dates
+    //   const dateA = new Date(a.Post.datetime);
+    //   const dateB = new Date(b.Post.datetime);
+
+    //   // First, show posts where postItem.Post.owner_id matches the userID
+    //   if (a.Post.owner.id === user_id && b.Post.owner.id !== user_id) {
+    //     return -1;
+    //   }
+    //   if (a.Post.owner.id !== user_id && b.Post.owner.id === user_id) {
+    //     return 1;
+    //   }
+
+    //   // Then, show posts where postItem.voter_ids includes userID
+    //   if (
+    //     a.voter_ids.includes(user_id) &&
+    //     !b.voter_ids.includes(user_id)
+    //   ) {
+    //     return -1;
+    //   }
+    //   if (
+    //     !a.voter_ids.includes(user_id) &&
+    //     b.voter_ids.includes(user_id)
+    //   ) {
+    //     return 1;
+    //   }
+
+    //   // Compare dates for other cases
+    //   return dateA - dateB;
+    // });
+    //   },
 
 
     showProfile(value){
