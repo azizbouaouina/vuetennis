@@ -164,8 +164,6 @@ async submitRequest() {
       });
 
       if (response.ok) {
-        // Handle success
-        console.log('Vote submitted successfully');
       } else {
         // Handle error
         console.error('Failed to submit vote');
@@ -214,7 +212,6 @@ async deleteRequest(){
       });
 
       if (response.ok) {
-        // Handle success
         console.log('Vote submitted successfully');
       } else {
         // Handle error
@@ -248,9 +245,6 @@ async checkUserRequestedMatch(){
   const userID = await checkLoggedIn();
   const userIDInt = parseInt(userID, 10);
 
-  console.log("user id is : ",userID)
-  console.log('array : ',this.requesterIds)
-  console.log(this.requesterIds.includes(userIDInt))
   if (userID ){
     return this.requesterIds.includes(userIDInt);
   }

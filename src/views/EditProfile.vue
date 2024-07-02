@@ -102,7 +102,6 @@ export default {
         }
 
         const data = await response.json();
-        console.log('Image uploaded successfully', data);
         // Handle success, if needed
         window.location.reload();
       } catch (error) {
@@ -133,8 +132,6 @@ export default {
         this.userData.gender=data.gender
         this.userData.phone_numer=data.phone_numer
         this.userData.photo=data.photo
-        console.log('User data:', data);
-        // Handle the data as needed
       } catch (error) {
         console.error('Error fetching user:', error);
         // Handle the error
@@ -160,7 +157,6 @@ export default {
         }
 
         const updatedUserData = await response.json();
-        console.log('Updated user data:', updatedUserData);
         window.location.reload();
         // Handle the updated data as needed
       } catch (error) {

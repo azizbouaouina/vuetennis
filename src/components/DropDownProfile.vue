@@ -17,16 +17,13 @@ export default {
     methods:{
         
         viewProfile() {
-            console.log('View Profile clicked');
             alert('Feature Comming Soon')
         },
         editProfile() {
-            console.log('Edit Profile clicked');
             this.$router.push({name:"edit"})
 
         },
         logout() {
-            console.log('Log Out clicked');
             localStorage.removeItem('token');
             this.$emit('loggedout','false')
             this.$router.push({name:"home"})

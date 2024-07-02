@@ -160,7 +160,6 @@ export default {
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 20px;
-        /* background-color: #fff; */
         border: 1px solid #ccc;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         z-index: 999;
@@ -175,12 +174,10 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
-    /* background: none; */
     border: 1px solid gray; 
     border-radius: 40%;
     font-size: 20px;
     cursor: pointer;
-    /* color: #3498db; */
   }
 
   .close-button:hover {
@@ -190,10 +187,9 @@ export default {
 
   .signup-message {
     text-align: center;
-    font-size: 18px; /* Adjust the font size as needed */
-    color: #3498db; /* Adjust the color to match your design */
-    /* margin-bottom: 20px; */
-    line-height: 1.5; /* Adjust the line height for better readability */
+    font-size: 18px; 
+    color: #3498db; 
+    line-height: 1.5; 
     padding: 0px;
     margin: 5px;
   }
@@ -217,7 +213,6 @@ export default {
     }
 
     .button-signup {
-    /* background-color: #3498db; */
     background-color: #2980b9;
     color: #fff;
     padding: 10px;

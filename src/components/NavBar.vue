@@ -58,7 +58,6 @@ export default {
 
 gotoHome() {
     this.$router.push({ name: "home" }).then(() => {
-        // Check if route is successfully navigated
         if (this.$route.name === 'home') {
             window.location.reload();
         }
@@ -81,7 +80,6 @@ gotoHome() {
 
 
         changePopUpSignUp(){
-            // this.showSign = true
             this.$emit('show-sign',true)
         },
 
@@ -110,7 +108,6 @@ gotoHome() {
 
 
 body {
-    /* font-family: 'Montserrat', sans-serif; */
     margin: 0;
     padding: 0;
 }
@@ -165,17 +162,12 @@ body {
 
 .log-sign{
   display: flex;
-  
-  /* justify-content: space-between; */
-  /* align-items: center; */
-
   justify-content: space-around;
   color: 333;
   text-decoration: none;
   width: 200px;
   color: #fff;
   font-size: 1.2em;
-  /* border : 5px solid grey; */
 }
 
 .login-nav {
@@ -192,7 +184,6 @@ body {
   font-size: 1.2em;
   cursor: pointer;
   margin-right: 20px;
-  /* border : 5px solid grey */
 }
 .sign-nav {
     cursor: pointer;

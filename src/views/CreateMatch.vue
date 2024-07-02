@@ -23,16 +23,10 @@
           <option value="intermediate">Intermediate</option>
           <option value="advanced">Advanced</option>
         </select>
-<!-- class="js-example-basic-single" -->
-        <!-- <div class="select-city"> -->
         <label for="city">City:</label>
         <select id="city" v-model="post.city">
-        <option v-for="city in cities" :value="city" :key="city">{{ city }}</option>
+          <option v-for="city in cities" :value="city" :key="city">{{ city }}</option>
         </select>
-
-
-        <!-- </div> -->
-        
 
         <label for="address">Address:</label>
         <input type="text" id="address" class="address" v-model="post.address" @input="updateCharacterCountAdress"  />
@@ -134,12 +128,7 @@ async handleSubmit() {
 
         if (response.ok) {
           alert('Data submitted successfully!');
-          //this.$router.push({name:"home"})
-          this.$router.push({ name: "home" }).then(() => {
-        if (this.$route.name === 'home') {
-            window.location.reload();
-        }
-    });
+          this.$router.push({name:"home"})
         } else {
           console.error('Failed to submit data:', response.statusText);
           alert('Failed to submit data.');

@@ -79,7 +79,6 @@ export default {
           },
         });
         const data = await response.json();
-        console.log(response.status===200)
         if (response.status===200){
           this.votes = data;
           this.authorized=true
@@ -111,7 +110,6 @@ export default {
         });
         const data = await response.json();
         this.showSuccess = data.accepted.includes(true)
-        console.log(this.showSuccess)
         
       } catch (error) {
         console.error('Error fetching votes:', error);
@@ -243,13 +241,13 @@ ul {
 }
 
 hr {
-    width: 25%; /* Adjust the width to make the line shorter */
+    width: 25%; 
     margin-left: 5px;
     margin-bottom: 20px;
     margin-top: 20px;
     border: none;
     height: 1px;
-    background-color: #ddd; /* Choose a color for the line */
+    background-color: #ddd; 
 }
 
 
@@ -263,7 +261,7 @@ hr {
 .player-name {
     font-size: 18px;
     font-weight: bold;
-    color: #1e0769dd; /* Choose a color for the text */
+    color: #1e0769dd; 
 
 }
 
@@ -273,7 +271,7 @@ hr {
         border-radius: 50%;
         overflow: hidden;
         margin-right: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); /* Subtle box-shadow */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); 
       }
 
       .player-image img {
@@ -309,42 +307,42 @@ button {
     border-radius: 4px;
     cursor: pointer;
     color: #fff;
-    background-color: #4caf50; /* Green color for 'Accept' button */
+    background-color: #4caf50; 
 }
 
 button.secondary {
-    background-color: #f44336; /* Red color for 'Refuse' button */
+    background-color: #f44336; 
 }
 
 button:hover {
-    background-color: #45a049; /* Darker green color on hover for 'Accept' button */
+    background-color: #45a049; 
 }
 
 button.secondary:hover {
-    background-color: #d32f2f; /* Darker red color on hover for 'Refuse' button */
+    background-color: #d32f2f; 
 }
 
 .matchFixed{
   border: none;
   border-radius: 4px;
   color: #2911b1;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Change font family */
-  font-size: 16px; /* Adjust font size */
-  opacity: 0; /* Start with opacity 0 for the fade-in effect */
-  animation: fadeIn 1s ease-out forwards; /* Use the fadeIn animation */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  font-size: 16px; 
+  opacity: 0; 
+  animation: fadeIn 1s ease-out forwards; 
 }
 
 @keyframes fadeIn {
   from {
-    opacity: 0; /* Start from fully transparent */
+    opacity: 0; 
   }
   to {
-    opacity: 1; /* End at fully opaque */
+    opacity: 1; 
   }
 }
 
 h1 {
-  color: #f00; /* Red color for emphasis */
+  color: #f00; 
   font-weight: bold;
   text-align: left; 
   margin: 20px 0; 
@@ -356,10 +354,10 @@ h1 {
   border: none;
   border-radius: 4px;
   color: #b1112c;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Change font family */
-  font-size: 20px; /* Adjust font size */
-  opacity: 0; /* Start with opacity 0 for the fade-in effect */
-  animation: fadeIn 1s ease-out forwards; /* Use the fadeIn animation */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  font-size: 20px; 
+  opacity: 0; 
+  animation: fadeIn 1s ease-out forwards; 
 
 }
 

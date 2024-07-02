@@ -219,43 +219,6 @@ export default {
       }
     },
 
-    // async sortedPosts() {
-    //   const userID = await verifyUserLoggedIn()
-    //   const user_id =parseInt(userID, 10)
-    //   // Sort posts based on your criteria
-    //   this.sortedPostsData = this.postsData.sort((a, b) => {
-    //   // Compare dates
-    //   const dateA = new Date(a.Post.datetime);
-    //   const dateB = new Date(b.Post.datetime);
-
-    //   // First, show posts where postItem.Post.owner_id matches the userID
-    //   if (a.Post.owner.id === user_id && b.Post.owner.id !== user_id) {
-    //     return -1;
-    //   }
-    //   if (a.Post.owner.id !== user_id && b.Post.owner.id === user_id) {
-    //     return 1;
-    //   }
-
-    //   // Then, show posts where postItem.voter_ids includes userID
-    //   if (
-    //     a.voter_ids.includes(user_id) &&
-    //     !b.voter_ids.includes(user_id)
-    //   ) {
-    //     return -1;
-    //   }
-    //   if (
-    //     !a.voter_ids.includes(user_id) &&
-    //     b.voter_ids.includes(user_id)
-    //   ) {
-    //     return 1;
-    //   }
-
-    //   // Compare dates for other cases
-    //   return dateA - dateB;
-    // });
-    //   },
-
-
     showProfile(value){
       this.loggedIn = value
     },
@@ -313,7 +276,6 @@ async checkLoggedIn(){
           const data = await response.json();
           // Handle the retrieved data as needed
           this.postsData = data;
-          // console.log(this.postsData)
         } else {
           console.error('Failed to fetch data:', response.statusText);
           // Handle the error
@@ -442,37 +404,12 @@ async checkLoggedIn(){
 .custom-select {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-evenly; */
-  /* align-items: center; */
 }
 
 .js-example-basic-single {
   width: 200px; 
   height: 200px;
-  /* height: 40px;
-  border: 1px solid #ddd; 
-  border-radius: 4px; */
 }
-
-
-/* 
-.select2-selection--single {
-  height: 40px;
-  border: 1px solid #ddd; 
-  border-radius: 4px;
-
-} */
-
-/* .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 40px;
-
-} */
-
-/* .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 38px;
-
-}  */
-
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -563,7 +500,6 @@ header {
 
 .featured-posts {
     display: flex;
-    /* justify-content: space-between; */
     flex-wrap: wrap;
 }
 

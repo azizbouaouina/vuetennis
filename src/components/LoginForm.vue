@@ -58,14 +58,12 @@ export default {
             })
             let res =await response.json()
             let status = await response.status
-            console.log(res)
             
             if (status === 200){
                 localStorage.setItem('token',res.access_token)
                 this.invalidCred=false
                 this.closeLoginForm()
                 this.showProfile()
-                // console.log("user is is ------------ : ",res.user_id)
                 this.$emit('userId',res.user_id)
                 this.$store.commit('updateUserId',res.user_id)
                 window.location.reload();
@@ -132,10 +130,6 @@ export default {
         width: 400px;
         height: 541px;
         border-radius: 5px;
-        /* display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center; */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -148,12 +142,10 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
-    /* background: none; */
     border: 1px solid gray; 
     border-radius: 40%;
     font-size: 20px;
     cursor: pointer;
-    /* color: #3498db; */
   }
 
   .close-button:hover {
@@ -163,10 +155,9 @@ export default {
 
   .signup-message {
     text-align: center;
-    font-size: 18px; /* Adjust the font size as needed */
-    color: #3498db; /* Adjust the color to match your design */
-    /* margin-bottom: 20px; */
-    line-height: 1.5; /* Adjust the line height for better readability */
+    font-size: 18px; 
+    color: #3498db;
+    line-height: 1.5; 
     padding: 0px;
     margin: 5px;
   }
