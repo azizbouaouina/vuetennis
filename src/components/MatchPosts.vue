@@ -455,5 +455,3 @@ seeRequests(){
         font-size: 0.9em;
       }
     </style>
-
-
