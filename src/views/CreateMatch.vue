@@ -134,7 +134,12 @@ async handleSubmit() {
 
         if (response.ok) {
           alert('Data submitted successfully!');
-          this.$router.push({name:"home"})
+          //this.$router.push({name:"home"})
+          this.$router.push({ name: "home" }).then(() => {
+        if (this.$route.name === 'home') {
+            window.location.reload();
+        }
+    });
         } else {
           console.error('Failed to submit data:', response.statusText);
           alert('Failed to submit data.');
