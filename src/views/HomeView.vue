@@ -240,7 +240,7 @@ async checkLoggedIn(){
 
         if (!response.ok) {
 
-          window.location.reload();
+          // window.location.reload();
 
           return false
           throw new Error('Failed to verify token');
@@ -504,5 +504,3 @@ header {
 }
 
 </style>
-
-
